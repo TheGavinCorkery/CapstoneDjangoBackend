@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication.apps.AuthenticationConfig',
     'corsheaders',
-    'ledgers.apps.LedgersConfig'
+    'ledgers.apps.LedgersConfig',
+    'transactions.apps.TransactionsConfig'
 ]
 
 MIDDLEWARE = [
