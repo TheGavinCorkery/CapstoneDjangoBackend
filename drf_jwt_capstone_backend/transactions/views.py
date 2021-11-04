@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from .models import Transaction
 from .serializers import TransactionSerializer
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -39,6 +40,13 @@ def user_transactions(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_category_transactions(request):
-    transactions = Transaction.object.filter(ledger_id=request.data.ledger_id, category = request.data.category)
+    transactions = Transaction.objects.filter(Q(ledger_id=request.data['ledger']) & Q(category = request.data['category']) & Q(user_id=request.user.id))
+    serializer = TransactionSerializer(transactions, many = True)
+    return Response(serializer.data, status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_ledger_transactions(request):
+    transactions = Transaction.objects.filter(Q(ledger_id=request.data['ledger']) & Q(user_id=request.user.id))
     serializer = TransactionSerializer(transactions, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)

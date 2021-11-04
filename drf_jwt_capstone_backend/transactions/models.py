@@ -8,7 +8,7 @@ User = get_user_model()
 # Create your models here.
 class Transaction(models.Model):
     ledger = models.ForeignKey('ledgers.Ledger', on_delete = models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default = None)
     date = models.DateField()
     place = models.CharField(max_length=40)
     total = models.FloatField()
