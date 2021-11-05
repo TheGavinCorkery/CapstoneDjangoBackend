@@ -10,4 +10,6 @@ urlpatterns = [
     path('category/all/', views.user_category_transactions),
     #Get all transactions for a users ledger
     path('ledger/all/', views.user_ledger_transactions),
+    #Update a users transaction
+    path('transaction/edit', views.update_user_transaction)
 ]

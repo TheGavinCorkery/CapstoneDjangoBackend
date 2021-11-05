@@ -50,3 +50,15 @@ def user_ledger_transactions(request):
     transactions = Transaction.objects.filter(Q(ledger_id=request.data['ledger']) & Q(user_id=request.user.id))
     serializer = TransactionSerializer(transactions, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user_transaction(request):
+    transaction = Transaction.objects.get(Q(id = request.data['id']))
+    transaction.date = request.data['date']
+    transaction.place = request.data['place']
+    transaction.total = request.data['total']
+    transaction.description = request.data['description']
+    transaction.category = request.data['category']
+    transaction.save()
+    return Response(status = status.HTTP_202_ACCEPTED)
