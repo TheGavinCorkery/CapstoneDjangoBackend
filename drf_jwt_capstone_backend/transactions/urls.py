@@ -11,5 +11,7 @@ urlpatterns = [
     #Get all transactions for a users ledger
     path('ledger/all/', views.user_ledger_transactions),
     #Update a users transaction
-    path('transaction/edit', views.update_user_transaction)
+    path('transaction/edit', views.update_user_transaction),
+    #Get users ledgers and categories
+    path('ledgers/list', views.get_user_categories_totals)
 ]
