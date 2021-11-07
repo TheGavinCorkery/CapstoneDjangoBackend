@@ -6,3 +6,8 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ['id', 'ledger', 'date', 'place', 'total',
         'description', 'category', 'user']
+
+class CategoryListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['ledger_id', 'category', 'total']

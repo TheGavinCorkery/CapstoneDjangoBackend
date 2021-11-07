@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from .models import Transaction
-from .serializers import TransactionSerializer
+from .serializers import TransactionSerializer, CategoryListSerializer
 from django.contrib.auth import get_user_model
 from django.db.models import Q, Sum, Count
 
@@ -67,6 +67,6 @@ def update_user_transaction(request):
 @permission_classes([IsAuthenticated])
 def get_user_categories_totals(request):
     categories = Transaction.objects.filter(Q(user_id = request.user.id))
-    updated = categories.values('ledger_id', 'category').annotate(total = Sum('total'))
-    print(updated)
-    return Response(status = status.HTTP_200_OK)
+    user_category_by_ledger = categories.values('ledger_id', 'category').annotate(total = Sum('total'))
+    serializer = CategoryListSerializer(user_category_by_ledger, many = True)
+    return Response(serializer.data, status = status.HTTP_200_OK)
