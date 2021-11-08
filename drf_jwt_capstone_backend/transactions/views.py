@@ -37,7 +37,8 @@ def user_transactions(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_category_transactions(request):
-    transactions = Transaction.objects.filter(Q(ledger_id=request.data['ledger']) & Q(category = request.data['category']) & Q(user_id=request.user.id))
+    print(request)
+    transactions = Transaction.objects.filter(Q(ledger=request.query_params['ledger']) & Q(category = request.query_params['category']) & Q(user_id=request.user.id))
     serializer = TransactionSerializer(transactions, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
@@ -73,6 +74,5 @@ def get_user_categories_totals(request):
 def get_ledger_totals(request):
     ledgers = Transaction.objects.filter(Q(user_id = request.user.id))
     user_ledgers = ledgers.values( 'ledger_id', ledger_name = F('ledger__name')).annotate(total = Sum('total'))
-    print(user_ledgers)
     serializer = LedgerTotalSerializer(user_ledgers, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
