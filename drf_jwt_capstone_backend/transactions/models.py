@@ -14,3 +14,8 @@ class Transaction(models.Model):
     total = models.FloatField()
     description = models.CharField(max_length=100)
     category = models.CharField(max_length= 20)
+
+class CategoryTotal(models.Model):
+    ledger_id = models.IntegerField()
+    ledger_name = models.CharField(max_length=30)
+    total = models.FloatField()

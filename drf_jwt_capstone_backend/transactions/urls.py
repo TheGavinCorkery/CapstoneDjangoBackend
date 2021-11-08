@@ -13,5 +13,7 @@ urlpatterns = [
     #Update a users transaction
     path('transaction/edit', views.update_user_transaction),
     #Get users ledgers and categories
-    path('ledgers/list', views.get_user_categories_totals)
+    path('ledgers/list', views.get_user_categories_totals),
+    #Get users ledgers totals
+    path('ledgers/totals', views.get_ledger_totals)
 ]
