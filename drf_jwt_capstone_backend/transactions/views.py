@@ -3,10 +3,11 @@ from rest_framework import status
 from rest_framework.response import Response 
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.serializers import Serializer
 from .models import Transaction
-from .serializers import TransactionSerializer, CategoryListSerializer, LedgerTotalSerializer
+from .serializers import TransactionSerializer, CategoryListSerializer, LedgerTotalSerializer, LedgerCategorySerializer
 from django.contrib.auth import get_user_model
-from django.db.models import Q, Sum, F
+from django.db.models import Q, Sum, F, Count
 
 User = get_user_model()
 
@@ -45,7 +46,7 @@ def user_category_transactions(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_ledger_transactions(request):
-    transactions = Transaction.objects.filter(Q(ledger_id=request.data['ledger']) & Q(user_id=request.user.id))
+    transactions = Transaction.objects.filter(Q(ledger_id=request.query_params['ledger']) & Q(user_id=request.user.id))
     serializer = TransactionSerializer(transactions, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
@@ -75,4 +76,12 @@ def get_ledger_totals(request):
     ledgers = Transaction.objects.filter(Q(user_id = request.user.id))
     user_ledgers = ledgers.values( 'ledger_id', ledger_name = F('ledger__name')).annotate(total = Sum('total'))
     serializer = LedgerTotalSerializer(user_ledgers, many = True)
+    return Response(serializer.data, status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ledger_categories(request):
+    categories = Transaction.objects.filter(Q(user_id = request.user.id) & Q(ledger_id=request.query_params['ledger']))
+    user_categories = categories.values('category').annotate(total = Sum('total'))
+    serializer = LedgerCategorySerializer(user_categories, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)

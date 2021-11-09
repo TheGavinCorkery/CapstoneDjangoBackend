@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Transaction, CategoryTotal
+from .models import Transaction, CategoryTotal, LedgerTotal
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +16,8 @@ class LedgerTotalSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoryTotal
         fields = ['ledger_id', 'ledger_name', 'total']
+        
+class LedgerCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LedgerTotal
+        fields = ['category', 'total']

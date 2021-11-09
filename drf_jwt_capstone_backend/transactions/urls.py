@@ -15,5 +15,7 @@ urlpatterns = [
     #Get users ledgers and categories
     path('ledgers/list', views.get_user_categories_totals),
     #Get users ledgers totals
-    path('ledgers/totals', views.get_ledger_totals)
+    path('ledgers/totals', views.get_ledger_totals),
+    #Get categories for ledger
+    path('ledger/categories', views.ledger_categories)
 ]
