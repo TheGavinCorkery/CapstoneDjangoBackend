@@ -26,3 +26,14 @@ def user_goals(request):
         print(transactions)
         serializer = GoalSerializer(transactions, many = True)
         return Response(serializer.data, status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_goal_category_ledger(request):
+    try:
+        goal = Goal.objects.filter(Q(user_id = request.user.id) & Q(ledger = request.query_params['ledger']) & Q(category = request.query_params['category']))
+        serializer = GoalSerializer(goal, many = True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    except Goal.DoesNotExist:
+        goal = "Does not exist"
+        return Response(goal, status = status.HTTP_200_OK)
