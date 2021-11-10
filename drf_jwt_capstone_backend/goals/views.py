@@ -22,6 +22,7 @@ def user_goals(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     elif request.method == 'GET':
-        transactions = Goal.objects.filter(user_id=request.user.id)
+        transactions = Goal.objects.filter(Q(user_id=request.user.id) & Q(ledger = request.query_params['ledger']))
+        print(transactions)
         serializer = GoalSerializer(transactions, many = True)
         return Response(serializer.data, status = status.HTTP_200_OK)
