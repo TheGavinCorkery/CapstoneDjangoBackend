@@ -31,7 +31,7 @@ def user_transactions(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     elif request.method == 'GET':
-        transactions = Transaction.objects.filter(user_id=request.user.id).order_by("date")[:10]
+        transactions = Transaction.objects.filter(user_id=request.user.id).order_by("-date")[:10]
         serializer = TransactionSerializer(transactions, many = True)
         return Response(serializer.data, status = status.HTTP_200_OK)
 
@@ -39,14 +39,14 @@ def user_transactions(request):
 @permission_classes([IsAuthenticated])
 def user_category_transactions(request):
     print(request)
-    transactions = Transaction.objects.filter(Q(ledger=request.query_params['ledger']) & Q(category = request.query_params['category']) & Q(user_id=request.user.id)).order_by("date")
+    transactions = Transaction.objects.filter(Q(ledger=request.query_params['ledger']) & Q(category = request.query_params['category']) & Q(user_id=request.user.id)).order_by("-date")
     serializer = TransactionSerializer(transactions, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_ledger_transactions(request):
-    transactions = Transaction.objects.filter(Q(ledger_id=request.query_params['ledger']) & Q(user_id=request.user.id)).order_by("date")
+    transactions = Transaction.objects.filter(Q(ledger_id=request.query_params['ledger']) & Q(user_id=request.user.id)).order_by("-date")
     serializer = TransactionSerializer(transactions, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
